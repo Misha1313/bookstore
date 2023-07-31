@@ -25,17 +25,33 @@ export class BookController {
 
   }
 
+  @Post()
+  create(@Body(ValidationPipe) body: CreateBookDto): string {
+    this.bookService.create(body);
+    return 'This action adds a new cat';
+  }
+
+  // play 
+  @Get('mock')
+  @UseFilters(HttpExceptionFilter, ForbiddenExceptionFilter)
+  findAllMock() {
+
+      this.bookService.findAllMock();
+
+  }
+
+  @Get('hi')
+  greeting(): string {
+
+      return this.bookService.greeting();
+
+  }
+
   @Get(':id')
   @Roles('admin')
   @UseInterceptors(BookInterceptor)
   find(@Param('id', new DefaultValuePipe(0), ParseIntPipe) id: string): string {
     return `${id}`;
-  }
-
-  @Post()
-  create(@Body(ValidationPipe) body: CreateBookDto): string {
-    this.bookService.create(body);
-    return 'This action adds a new cat';
   }
 }
 

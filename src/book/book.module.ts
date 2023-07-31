@@ -4,6 +4,10 @@ import { BookService } from './book.service';
 import { BookRepository } from './book.repository';
 import { ValidationPipe } from './pipes/validation.pipe';
 import { BookInterceptor } from './interceptors/book.interceptor';
+import { BookRepositoryMock } from './mocks/book-repository.mock';
+import { CustomProviderEnum } from 'src/common/enums/custom-provider.enum';
+import { UserRepository } from './providers/user.provider';
+import { GreetingProvider } from './custom-providers/greeting.custom-providers';
 
 @Global()
 @Module({
@@ -11,8 +15,14 @@ import { BookInterceptor } from './interceptors/book.interceptor';
   providers: [
     BookService,
     BookRepository,
+    {
+      provide: CustomProviderEnum.BookRepositoryMock,
+      useValue: BookRepositoryMock
+    },
     ValidationPipe,
-    BookInterceptor
+    BookInterceptor,
+    UserRepository,
+    GreetingProvider
   ],
   exports: [BookService]
 })

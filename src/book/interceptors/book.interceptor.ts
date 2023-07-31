@@ -11,7 +11,7 @@ export class BookInterceptor implements NestInterceptor {
     return next
       .handle()
       .pipe(
-        tap(() => console.log(`After... ${Date.now() - now}ms`)),
+        tap(() => console.log('sasd')),
       );
   }
 }
