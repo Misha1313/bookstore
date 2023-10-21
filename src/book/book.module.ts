@@ -6,11 +6,29 @@ import { ValidationPipe } from './pipes/validation.pipe';
 import { BookInterceptor } from './interceptors/book.interceptor';
 import { BookRepositoryMock } from './mocks/book-repository.mock';
 import { CustomProviderEnum } from 'src/common/enums/custom-provider.enum';
-import { UserRepository } from './providers/user.provider';
 import { GreetingProvider } from './custom-providers/greeting.custom-providers';
+import { LogModule } from 'src/common/log/log.module';
+import { ProviderRepository } from './providers/user.provider';
+import { AuthModule } from 'src/auth/auth.module';
+import { RoleModule } from 'src/role/role.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Author } from './entities/author.entity';
+import { Genre } from './entities/genre.entity';
+import { Book } from './entities/book.entity';
 
 @Global()
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      Book,
+      Author,
+      Genre
+    ]),
+    LogModule,
+    AuthModule,
+    RoleModule
+  ],
   controllers: [BookController],
   providers: [
     BookService,
@@ -21,8 +39,8 @@ import { GreetingProvider } from './custom-providers/greeting.custom-providers';
     },
     ValidationPipe,
     BookInterceptor,
-    UserRepository,
-    GreetingProvider
+    GreetingProvider,
+    ProviderRepository
   ],
   exports: [BookService]
 })

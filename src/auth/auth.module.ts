@@ -1,17 +1,33 @@
 import { Global, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { AuthMiddleware } from './middleware/auth.middleware';
 import { AuthController } from './auth.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { AuthService } from './auth.service';
+import { AuthGuard } from './guards/auth.guard';
 
 
 @Global()
 @Module({
-  controllers: [AuthController]
+  imports: [
+    JwtModule.register({
+      global: true,
+      secret: 'secret',
+      signOptions: { expiresIn: '3600s' },
+    })
+
+    // JwtModule.registerAsync({
+    //   useFactory: (configService: ConfigService) => ({
+    //     global: true,
+    //     secret: configService.get('JWT_SECRET'),
+    //     signOptions: { expiresIn: configService.get('JWT_EXPIRATION_TIME') }
+    //   }),
+    //   inject: [ConfigService]
+    // })
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, AuthGuard],
+  exports: [AuthGuard]
 })
-export class AuthModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .exclude({path: 'login', method: RequestMethod.POST})
-      .forRoutes('login');
-  }
+export class AuthModule {
+ 
 }

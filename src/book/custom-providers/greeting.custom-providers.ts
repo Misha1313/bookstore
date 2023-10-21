@@ -1,12 +1,12 @@
 import { CustomProviderEnum } from "src/common/enums/custom-provider.enum";
-import { UserRepository } from "../providers/user.provider";
+import { ProviderRepository } from "../providers/user.provider";
 
 export const GreetingProvider = {
     provide: CustomProviderEnum.Greeing,
-    useFactory: (userRepository: UserRepository, optionalProvider?: string) => {
-      const name = userRepository.getName();
+    useFactory: (providerRepository: ProviderRepository, optionalProvider?: string) => {
+      const name = providerRepository.getName();
       return `hello ${name}`;
     },
-    inject: [UserRepository, { token: 'SomeOptionalProvider', optional: true }],
+    inject: [ProviderRepository, { token: 'SomeOptionalProvider', optional: true }],
 
   };

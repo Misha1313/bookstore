@@ -1,54 +1,56 @@
 import { Body, Controller, DefaultValuePipe, ForbiddenException, Get, HttpException, HttpStatus, Param, ParseIntPipe, Post, Req, UseFilters, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import { CreateBookDto } from './dtos/create-book.dto';
 import { BookService } from './book.service';
-import { response } from 'express';
 import { HttpExceptionFilter } from 'src/exception-filters/http-exception.filter';
 import { ForbiddenExceptionFilter } from 'src/exception-filters/forbidden-exception.filter';
-import { ValidationPipe } from './pipes/validation.pipe';
-import { Roles } from 'src/decorators/roles.decorator';
-import { RolesGuard } from 'src/guards/role.guard';
 import { BookInterceptor } from './interceptors/book.interceptor';
-import { User } from 'src/decorators/user.decorator';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+import { Roles } from 'src/role/role.decorator';
+import { RoleEnum } from 'src/role/roles.enum';
+import { RolesGuard } from 'src/role/role.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('book')
-@UseGuards(RolesGuard)
+@UseInterceptors(CacheInterceptor)
 export class BookController {
   constructor(
     private bookService: BookService
   ) {}
-  @Get()
-  @UseFilters(HttpExceptionFilter, ForbiddenExceptionFilter)
-  findAll(@User('name') name: string): string {
-
-      this.bookService.findAll();
-      return `Hello ${name}`;
-
-  }
 
   @Post()
-  create(@Body(ValidationPipe) body: CreateBookDto): string {
-    this.bookService.create(body);
-    return 'This action adds a new cat';
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  @Roles(RoleEnum.Admin)
+  async create(@Body() body: CreateBookDto) {
+  
+    return this.bookService.create(body);
+  }
+
+  @Get()
+  @UseFilters(HttpExceptionFilter, ForbiddenExceptionFilter)
+  // findAll(@User('name') name: string): string {
+  async findAll() {
+
+      return this.bookService.findAll();
+
   }
 
   // play 
-  @Get('mock')
-  @UseFilters(HttpExceptionFilter, ForbiddenExceptionFilter)
-  findAllMock() {
+  // @Get('mock')
+  // @UseFilters(HttpExceptionFilter, ForbiddenExceptionFilter)
+  // findAllMock() {
 
-      this.bookService.findAllMock();
+  //     this.bookService.findAllMock();
 
-  }
+  // }
 
-  @Get('hi')
-  greeting(): string {
-
-      return this.bookService.greeting();
-
-  }
+  // @Get('hi')
+  // greeting(): string {
+  //     return this.bookService.greeting();
+  // }
 
   @Get(':id')
-  @Roles('admin')
   @UseInterceptors(BookInterceptor)
   find(@Param('id', new DefaultValuePipe(0), ParseIntPipe) id: string): string {
     return `${id}`;
