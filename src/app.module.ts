@@ -2,7 +2,6 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BookModule } from './book/book.module';
-import { PhoneModule } from './phone/phone.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
@@ -17,12 +16,14 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { RoleModule } from './role/role.module';
 import { migrations } from './database/migrations';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { CartItemModule } from './cart-item/cart-item.module';
+import { SaleModule } from './sale/sale.module';
+import { PaymentAccountModule } from './payment-account/payment-account.module';
 
 
 @Module({
   imports: [
     BookModule,
-    PhoneModule,
     AuthModule,
     UserModule,
     ConfigModule.forRoot({
@@ -37,14 +38,15 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       // name: 'postgresql connection'
         type: 'postgres',
         host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
+        port: 5439,
+        username: 'app',
+        password: 'app123',
         database: 'postgres',
         namingStrategy: new SnakeNamingStrategy(),
         migrations,
         synchronize: false,
         autoLoadEntities: true,
+        migrationsRun: true
     }),
     CacheModule.register({
       isGlobal: true
@@ -60,7 +62,10 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       ttl: 60000,
       limit: 10,
     }]),
-    RoleModule
+    RoleModule,
+    CartItemModule,
+    SaleModule,
+    PaymentAccountModule
     
   ],
   controllers: [AppController],

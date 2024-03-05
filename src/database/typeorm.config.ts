@@ -8,9 +8,9 @@ import { migrations } from "./migrations";
 export default new DataSource({
     type: 'postgres',
     host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'postgres',
+    port: 5439,
+    username: 'app',
+    password: 'app123',
     database: 'postgres',
     namingStrategy: new SnakeNamingStrategy(),
     entities: entities,

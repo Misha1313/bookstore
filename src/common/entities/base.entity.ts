@@ -10,7 +10,5 @@ export class BaseEntity {
 
     @UpdateDateColumn()
     updateDate: Date;
-
-    @DeleteDateColumn()
-    deleteDate: Date;
+    
 }

@@ -34,7 +34,10 @@ export class Book extends BaseEntity {
 
     @AfterLoad()
     convertStringToInt() {
-        this.price = parseFloat(this.price.toString());
+        if (this.price) {
+            this.price = parseFloat(this.price.toString());
+        }
+        
     }
     
 }

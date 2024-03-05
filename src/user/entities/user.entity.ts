@@ -7,7 +7,7 @@ import * as bcrypt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
 
 @Entity({
-    schema: 'users'
+    schema: 'user'
 })
 export class User extends BaseEntity {
     // constructor(partial: Partial<UserEntity>) {

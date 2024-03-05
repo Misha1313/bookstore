@@ -12,7 +12,7 @@ export class Genre {
     @PrimaryColumn()
     id: number;
 
-    @Column()
+    @Column({ nullable: true })
     name: string;
 
     @OneToMany(() => Book, (entity) => entity.genre)

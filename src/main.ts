@@ -6,6 +6,7 @@ import { LoggerService } from './common/logger/logger.service';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression'
 import helmet from 'helmet';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,10 +32,27 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('book')
     .addBearerAuth()
+    .addSecurityRequirements('bearer')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
+
+  const kafka = await app.connectMicroservice<MicroserviceOptions>({
+    
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        clientId: 'hero',
+        brokers: ['localhost:29092'],
+      },
+      consumer: {
+        groupId: 'hero-consumer'
+      }
+    }
+      
+  });
+
+  await app.startAllMicroservices();
   await app.listen(3000);
 }
 bootstrap();

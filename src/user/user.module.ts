@@ -4,6 +4,8 @@ import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { UserController } from './user.controller';
+import { UserProducerModule } from './producer/user-producer.module';
+import { UserConsumerModule } from './consumer/user-consumer.module';
 
 
 @Global()
@@ -11,7 +13,9 @@ import { UserController } from './user.controller';
   imports: [
     TypeOrmModule.forFeature([
       User
-    ])
+    ]),
+    UserProducerModule
+    // UserConsumerModule
   ],
   controllers: [
     UserController

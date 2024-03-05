@@ -1,9 +1,8 @@
-import { BookRepository } from "../book.repository";
-import { Book } from "../types/book.type";
+import { BookType } from "../types/book.type";
 
 export const BookRepositoryMock = {
   books: [],
-  create(book: Book) {
+  create(book: BookType) {
     this.books.push(book);
   },
 
